@@ -1,2 +1,2 @@
-# ARQSOFT_ODSOFT
+# Library Management Service
 project for ARQSOFT and ODSOFT for MEI-ISEP
