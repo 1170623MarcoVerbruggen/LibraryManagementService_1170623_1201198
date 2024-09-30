@@ -23,7 +23,7 @@ class Book {
     - isbn
     - title
     - description
-    - photo
+    - photos
 }
 
 class Author {
