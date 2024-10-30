@@ -33,11 +33,8 @@ Implement algorithms to generate unique IDs in the system regardless of persiste
 
 ### Alternatives
 
-* Implement extensive comparison methods in domain model classes to identify instances by the totality of its definition
-  * Requires unique implementation for each current and potential (future) domain class and constant running of comparison algorithms
 * Implement standard UUID generation
 
 ### Pending Issues
 
 * How to resolve the problem with a more efficient solution
-* How to, as much as possible, ensure uniqueness of IDs with current methods
