@@ -1,10 +1,16 @@
 package pt.psoft.g1.psoftg1.bookmanagement.model;
 
 import org.hibernate.StaleObjectStateException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
+import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
 import pt.psoft.g1.psoftg1.bookmanagement.services.*;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
 
@@ -15,6 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 class BookTest {
     private final Isbn validIsbn = new Isbn("9782826012092");
@@ -150,5 +157,58 @@ class BookTestVerify{
         assertEquals(authors, book.getAuthors());
     }
 
+
+
+    @Nested
+    class BookAcceptanceTest {
+
+        @Test
+        void testBookAcceptanceCriteria() {
+            // Defina as condições de aceitação
+            String expectedTitle = "Foundation";
+            String expectedDescription = "Description";
+            Author validAuthor1 = new Author("João Alberto", "O João Alberto nasceu em Chaves e foi pedreiro a maior parte da sua vida.", null);
+            List<Author> l = new ArrayList<>();
+            l.add(validAuthor1);
+            Book book = new Book(new Isbn("9783161484100"), new Title(expectedTitle), new Description(expectedDescription), new Genre("Science Fiction"), l, "photoURI");
+
+            // Verifique as condições de aceitação
+            assertEquals(expectedTitle, book.getTitle().toString());
+            assertEquals(expectedDescription, book.getDescription());
+        }
+    }
+
+    @Nested
+    @DataJpaTest
+    class BookIntegrationTest {
+
+        @Autowired
+        private BookRepository bookRepository;
+
+        private Book book;
+        private Genre genre;
+        private Author author;
+
+        @BeforeEach
+        void setUp() {
+            genre = new Genre("Science Fiction");
+            author = new Author("Isaac Asimov", "Bio about Isaac Asimov", "photoURI");
+            book = new Book(new Isbn("9783161484100"), new Title("Foundation"), new Description("Description"), genre, Collections.singletonList(author), "photoURI");
+        }
+
+        @AfterEach
+        void tearDown() {
+            bookRepository.delete(book);
+        }
+
+        @Test
+        @Rollback
+        void testBookSaveAndFind() {
+            bookRepository.save(book);
+            Optional<Book> foundBook = bookRepository.findByIsbn(book.getIsbn());
+            assertTrue(foundBook.isPresent());
+            assertEquals("Foundation", foundBook.get().getTitle().toString());
+        }
+    }
 
 }
