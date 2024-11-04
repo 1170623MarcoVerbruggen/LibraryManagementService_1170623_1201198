@@ -43,6 +43,8 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public Book create(CreateBookRequest request, String isbn) {
 
+		FactoryBook fb = new FactoryBook();
+
 		if(bookRepository.findByIsbn(isbn).isPresent()){
 			throw new ConflictException("Book with ISBN " + isbn + " already exists");
 		}
@@ -70,7 +72,7 @@ public class BookServiceImpl implements BookService {
 		final var genre = genreRepository.findByString(request.getGenre())
 				.orElseThrow(() -> new NotFoundException("Genre not found"));
 
-		Book newBook = new Book(isbn, request.getTitle(), request.getDescription(), genre, authors, photoURI);
+		Book newBook = fb.create(isbn, request.getTitle(), request.getDescription(), genre, authors, photoURI);
 
         return bookRepository.save(newBook);
 	}

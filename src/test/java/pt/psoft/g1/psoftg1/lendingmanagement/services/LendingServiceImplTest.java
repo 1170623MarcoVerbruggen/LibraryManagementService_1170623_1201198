@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.psoft.g1.psoftg1.authormanagement.model.Author;
 import pt.psoft.g1.psoftg1.authormanagement.repositories.AuthorRepository;
 import pt.psoft.g1.psoftg1.bookmanagement.model.Book;
+import pt.psoft.g1.psoftg1.bookmanagement.model.Description;
+import pt.psoft.g1.psoftg1.bookmanagement.model.Isbn;
+import pt.psoft.g1.psoftg1.bookmanagement.model.Title;
 import pt.psoft.g1.psoftg1.bookmanagement.repositories.BookRepository;
 import pt.psoft.g1.psoftg1.exceptions.LendingForbiddenException;
 import pt.psoft.g1.psoftg1.genremanagement.model.Genre;
@@ -64,9 +67,9 @@ class LendingServiceImplTest {
         genreRepository.save(genre);
 
         List<Author> authors = List.of(author);
-        book = new Book("9782826012092",
-                "O Inspetor Max",
-                "conhecido pastor-alemão que trabalha para a Judiciária, vai ser fundamental para resolver um importante caso de uma rede de malfeitores que quer colocar uma bomba num megaconcerto de uma ilustre cantora",
+        book = new Book(new Isbn("9782826012092"),
+                new Title("O Inspetor Max"),
+                new Description("conhecido pastor-alemão que trabalha para a Judiciária, vai ser fundamental para resolver um importante caso de uma rede de malfeitores que quer colocar uma bomba num megaconcerto de uma ilustre cantora"),
                 genre,
                 authors,
                 null);

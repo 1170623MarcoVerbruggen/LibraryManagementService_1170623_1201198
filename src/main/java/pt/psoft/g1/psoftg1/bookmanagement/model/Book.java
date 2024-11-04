@@ -48,13 +48,13 @@ public class Book extends EntityWithPhoto {
     @Embedded
     Description description;
 
-    private void setTitle(String title) {this.title = new Title(title);}
+    private void setTitle(Title title) {this.title = title;}
 
-    private void setIsbn(String isbn) {
-        this.isbn = new Isbn(isbn);
+    private void setIsbn(Isbn isbn) {
+        this.isbn = isbn;
     }
 
-    private void setDescription(String description) {this.description = new Description(description); }
+    private void setDescription(Description description) {this.description = description; }
 
     private void setGenre(Genre genre) {this.genre = genre; }
 
@@ -62,7 +62,7 @@ public class Book extends EntityWithPhoto {
 
     public String getDescription(){ return this.description.toString(); }
 
-    public Book(String isbn, String title, String description, Genre genre, List<Author> authors, String photoURI) {
+    public Book(Isbn isbn, Title title, Description description, Genre genre, List<Author> authors, String photoURI) {
         setTitle(title);
         setIsbn(isbn);
         if(description != null)
@@ -101,11 +101,13 @@ public class Book extends EntityWithPhoto {
         List<Author> authors = request.getAuthorObjList();
         String photoURI = request.getPhotoURI();
         if(title != null) {
-            setTitle(title);
+            Title newTitle = new Title(title);
+            setTitle(newTitle);
         }
 
         if(description != null) {
-            setDescription(description);
+            Description newDescription = new Description(description);
+            setDescription(newDescription);
         }
 
         if(genre != null) {
